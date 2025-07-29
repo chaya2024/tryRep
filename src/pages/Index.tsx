@@ -1,13 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { WelcomeScreen } from "@/components/WelcomeScreen";
+import { LessonInterface } from "@/components/LessonInterface";
+import { mockLesson } from "@/data/mockData";
 
 const Index = () => {
+  const [isLessonStarted, setIsLessonStarted] = useState(false);
+
+  const handleStartLesson = () => {
+    setIsLessonStarted(true);
+  };
+
+  const handleEndLesson = () => {
+    setIsLessonStarted(false);
+  };
+
+  if (isLessonStarted) {
+    return (
+      <LessonInterface 
+        lesson={mockLesson} 
+        onEndLesson={handleEndLesson}
+      />
+    );
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <WelcomeScreen 
+      lesson={mockLesson}
+      onStartLesson={handleStartLesson}
+    />
   );
 };
 
