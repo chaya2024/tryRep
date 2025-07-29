@@ -223,6 +223,14 @@ export const LessonInterface = ({ lesson, onEndLesson }: LessonInterfaceProps) =
                   >
                     שלב הבא
                   </Button>
+                  <Button 
+                    onClick={moveToNextStep}
+                    disabled={!session.isActive || session.currentStep >= lesson.steps.length - 1}
+                    variant="secondary"
+                    size="sm"
+                  >
+                    דלג לשלב הבא
+                  </Button>
                 </div>
               </CardTitle>
             </CardHeader>
