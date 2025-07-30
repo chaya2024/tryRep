@@ -1,73 +1,215 @@
-# Welcome to your Lovable project
+# 🚀 Ignite Curiosity AI - Interactive Educational Platform
 
-## Project info
+An advanced educational platform that combines AI with interactive learning for children. The system enables creating dynamic lessons with simulated child responses and an intelligent AI instructor.
 
-**URL**: https://lovable.dev/projects/a94a0fb7-1dd4-41e1-b331-4197afbe307d
+## 🎯 **What the System Does**
 
-## How can I edit this code?
+- **Interactive Lessons** with AI instructor
+- **Simulated Child Responses** with unique personality for each child
+- **Group Chat Interface** with smooth scrolling
+- **Dynamic Lesson Step Management**
+- **Real-time Progress Tracking**
 
-There are several ways of editing your application.
+## 🏗️ **Architecture**
 
-**Use Lovable**
+### **Frontend (Client)**
+- **React 18** + **TypeScript**
+- **Vite** - Fast build tool
+- **Tailwind CSS** - Modern styling
+- **shadcn/ui** - Component library
+- **React Router** - Navigation
+- **Axios** - HTTP client
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a94a0fb7-1dd4-41e1-b331-4197afbe307d) and start prompting.
+### **Backend (Server)**
+- **Node.js** + **Express**
+- **MongoDB** + **Mongoose** - Database
+- **CORS** - Cross-origin requests
+- **REST API** - Communication
 
-Changes made via Lovable will be committed automatically to this repo.
+### **Database**
+- **MongoDB** - NoSQL database
+- **Collections**: Lessons, Children, Messages
 
-**Use your preferred IDE**
+## 📁 **Project Structure**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```
+ignite-curiosity-ai/
+├── client/                 # Frontend Application
+│   ├── src/
+│   │   ├── components/     # React Components
+│   │   │   ├── ui/        # shadcn/ui components
+│   │   │   ├── LessonInterface.tsx
+│   │   │   ├── WelcomeScreen.tsx
+│   │   │   ├── ParticipantList.tsx
+│   │   │   └── ChatMessage.tsx
+│   │   ├── pages/         # Page Components
+│   │   │   ├── Index.tsx
+│   │   │   └── NotFound.tsx
+│   │   ├── services/      # API Services
+│   │   │   └── api.ts
+│   │   ├── types/         # TypeScript Types
+│   │   │   └── lesson.ts
+│   │   ├── hooks/         # Custom Hooks
+│   │   │   ├── use-mobile.tsx
+│   │   │   └── use-toast.ts
+│   │   ├── lib/           # Utilities
+│   │   │   └── utils.ts
+│   │   ├── App.tsx        # Main App Component
+│   │   ├── main.tsx       # Entry Point
+│   │   └── index.css      # Global Styles
+│   ├── public/            # Static Assets
+│   ├── package.json       # Dependencies
+│   ├── tailwind.config.ts # Tailwind Configuration
+│   └── vite.config.ts     # Vite Configuration
+├── server/                # Backend Application
+│   ├── models/            # MongoDB Models
+│   │   ├── Lesson.js
+│   │   ├── Child.js
+│   │   └── Message.js
+│   ├── routes/            # API Routes
+│   │   └── api.js
+│   ├── index.js           # Server Entry Point
+│   ├── seed.js            # Database Seeding
+│   └── package.json       # Dependencies
+└── README.md              # This File
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🚀 **Installation & Setup**
 
-Follow these steps:
+### **Prerequisites**
+- Node.js (v16 or higher)
+- MongoDB (local or Atlas)
+- npm or yarn
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### **Step 1: Clone the Project**
+```bash
+git clone <repository-url>
+cd ignite-curiosity-ai
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### **Step 2: Install Dependencies**
+```bash
+# Install Client dependencies
+cd client
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install Server dependencies
+cd ../server
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### **Step 3: Database Setup**
+1. **Local MongoDB:**
+   ```bash
+   # Run MongoDB
+   mongod
+   ```
+
+2. **Or MongoDB Atlas:**
+   - Create a cluster in Atlas
+   - Copy the connection string
+
+### **Step 4: Seed Initial Data**
+```bash
+cd server
+node seed.js
+```
+
+### **Step 5: Run the Server**
+```bash
+# Terminal 1
+cd server
+npx nodemon index.js
+```
+
+### **Step 6: Run the Client**
+```bash
+# Terminal 2
+cd client
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### **Step 7: Access the System**
+- **Client**: http://localhost:8080 (or the displayed port)
+- **Server API**: http://localhost:4000
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🔧 **API Endpoints**
 
-**Use GitHub Codespaces**
+### **Lessons**
+- `GET /api/lessons` - Get all lessons
+- `GET /api/lessons/:id` - Get specific lesson
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### **Children**
+- `GET /api/children` - Get all children
 
-## What technologies are used for this project?
+### **Messages**
+- `GET /api/messages/:lessonId` - Get messages for a lesson
+- `POST /api/messages` - Add new message
 
-This project is built with:
+### **Health Check**
+- `GET /api/health` - Server health check
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🎨 **Features**
 
-## How can I deploy this project?
+### **Advanced User Interface**
+- **Responsive Design** - Works on all devices
+- **Real-time Chat** - Group chat in real-time
+- **Interactive Buttons** - Interactive buttons
+- **Progress Tracking** - Lesson progress tracking
 
-Simply open [Lovable](https://lovable.dev/projects/a94a0fb7-1dd4-41e1-b331-4197afbe307d) and click on Share -> Publish.
+### **Smart Simulation**
+- **AI Teacher** - AI instructor that responds dynamically
+- **Child Personalities** - Each child with unique personality
+- **Dynamic Responses** - Context-aware responses
 
-## Can I connect a custom domain to my Lovable project?
+### **Lesson Management**
+- **Step-by-step Progress** - Progress step by step
+- **Time Management** - Time management for each step
+- **Session Management** - Lesson session management
 
-Yes, you can!
+## 🛠️ **Development**
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### **Available Scripts**
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+**Client:**
+```bash
+npm run dev          # Run development server
+npm run build        # Build production build
+npm run preview      # Preview production build
+npm run lint         # Check code quality
+```
+
+**Server:**
+```bash
+npx nodemon index.js # Run server with auto-reload
+node seed.js         # Seed initial data
+```
+
+### **Environment Variables**
+
+**Server (.env):**
+```env
+MONGO_URL=mongodb://localhost:27017/ignite-curiosity
+PORT=4000
+```
+
+## 🤝 **Contributing**
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 **License**
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+## 📞 **Contact**
+
+- **Email**: [your-email@example.com]
+- **GitHub**: [your-github-username]
+
+---
+
+**Made with ❤️ for educational innovation** 
