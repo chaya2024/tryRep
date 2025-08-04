@@ -159,6 +159,85 @@ app.get('/api/ai-texts/random/:type', (req, res) => {
   res.json(randomText);
 });
 
+// Admin endpoints
+app.get('/api/admin/groups', (req, res) => {
+  const mockGroups = [
+    {
+      id: "group-1",
+      name: "קבוצה א' - כיתה ג'",
+      currentStep: 2,
+      participantCount: 6,
+      participants: [
+        { name: "דוד", joinedAt: "2024-01-15T09:00:00Z" },
+        { name: "שרה", joinedAt: "2024-01-15T09:00:00Z" },
+        { name: "יוסי", joinedAt: "2024-01-15T09:00:00Z" }
+      ],
+      script: { title: "האי הבודד - הרפתקת יזמות", description: "שיעור פתיחה בנושא יזמות" },
+      isActive: true,
+      createdAt: "2024-01-15T09:00:00Z",
+      progress: {
+        completedSteps: 2,
+        status: "in-progress"
+      }
+    },
+    {
+      id: "group-2",
+      name: "קבוצה ב' - כיתה ד'",
+      currentStep: 1,
+      participantCount: 5,
+      participants: [
+        { name: "מיה", joinedAt: "2024-01-15T10:00:00Z" },
+        { name: "איתי", joinedAt: "2024-01-15T10:00:00Z" }
+      ],
+      script: { title: "האי הבודד - הרפתקת יזמות", description: "שיעור פתיחה בנושא יזמות" },
+      isActive: true,
+      createdAt: "2024-01-15T10:00:00Z",
+      progress: {
+        completedSteps: 1,
+        status: "in-progress"
+      }
+    }
+  ];
+  res.json(mockGroups);
+});
+
+app.get('/api/admin/scripts', (req, res) => {
+  const mockScripts = [
+    {
+      _id: "script-1",
+      title: "האי הבודד - הרפתקת יזמות",
+      description: "שיעור פתיחה בנושא יזמות דרך תרחיש מרתק של נחיתה על אי בודד",
+      targetAge: { min: 8, max: 12 },
+      duration: 45,
+      steps: [
+        { title: "פתיחה והכרות", duration: 5 },
+        { title: "הצגת התרחיש", duration: 10 },
+        { title: "דיון פתוח", duration: 15 },
+        { title: "משימה קבוצתית", duration: 10 },
+        { title: "סיכום והשראה", duration: 5 }
+      ],
+      isActive: true,
+      createdAt: "2024-01-01T00:00:00Z"
+    },
+    {
+      _id: "script-2",
+      title: "מסע בחלל - חקר מדעי",
+      description: "שיעור מדעים אינטראקטיבי על מערכת השמש",
+      targetAge: { min: 9, max: 13 },
+      duration: 50,
+      steps: [
+        { title: "הכרות עם החלל", duration: 8 },
+        { title: "סיור וירטואלי", duration: 15 },
+        { title: "ניסויים מדעיים", duration: 20 },
+        { title: "סיכום ותובנות", duration: 7 }
+      ],
+      isActive: true,
+      createdAt: "2024-01-05T00:00:00Z"
+    }
+  ];
+  res.json(mockScripts);
+});
+
 app.listen(3000, () => {
   console.log('Working server running on http://localhost:3000');
   console.log('Using mock data for development');

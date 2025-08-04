@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { LessonInterface } from "@/components/LessonInterface";
+import { Admin } from "@/pages/Admin";
 import { apiService } from "@/services/api";
 import { Lesson } from "@/types/lesson";
 
 const Index = () => {
   const [isLessonStarted, setIsLessonStarted] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +39,14 @@ const Index = () => {
 
   const handleEndLesson = () => {
     setIsLessonStarted(false);
+  };
+
+  const handleShowAdmin = () => {
+    setShowAdmin(true);
+  };
+
+  const handleBackToMain = () => {
+    setShowAdmin(false);
   };
 
   if (loading) {
@@ -76,20 +86,45 @@ const Index = () => {
     );
   }
 
+  if (showAdmin) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="p-4">
+          <button 
+            onClick={handleBackToMain}
+            className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            ← חזרה לדף הראשי
+          </button>
+        </div>
+        <Admin />
+      </div>
+    );
+  }
+
   if (isLessonStarted) {
     return (
       <LessonInterface 
         lesson={lesson} 
         onEndLesson={handleEndLesson}
+        onShowAdmin={handleShowAdmin}
       />
     );
   }
 
   return (
-    <WelcomeScreen 
-      lesson={lesson}
-      onStartLesson={handleStartLesson}
-    />
+    <div className="relative">
+      <WelcomeScreen 
+        lesson={lesson}
+        onStartLesson={handleStartLesson}
+      />
+      <button 
+        onClick={handleShowAdmin}
+        className="absolute top-4 right-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-lg"
+      >
+        ⚙️ ניהול
+      </button>
+    </div>
   );
 };
 

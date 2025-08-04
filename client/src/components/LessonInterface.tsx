@@ -14,9 +14,10 @@ import { apiService, AIText } from "@/services/api";
 interface LessonInterfaceProps {
   lesson: Lesson;
   onEndLesson: () => void;
+  onShowAdmin?: () => void;
 }
 
-export const LessonInterface = ({ lesson, onEndLesson }: LessonInterfaceProps) => {
+export const LessonInterface = ({ lesson, onEndLesson, onShowAdmin }: LessonInterfaceProps) => {
   const [session, setSession] = useState<ChatSession>({
     id: `session-${Date.now()}`,
     lessonId: lesson.id,
@@ -263,6 +264,15 @@ export const LessonInterface = ({ lesson, onEndLesson }: LessonInterfaceProps) =
               <Badge variant="secondary" className="text-sm">
                 שלב {session.currentStep + 1}: {currentStep.title}
               </Badge>
+            )}
+            {onShowAdmin && (
+              <Button 
+                variant="outline" 
+                onClick={onShowAdmin}
+                className="bg-purple-600 text-white hover:bg-purple-700"
+              >
+                ⚙️ ניהול
+              </Button>
             )}
             <Button 
               variant="outline" 
