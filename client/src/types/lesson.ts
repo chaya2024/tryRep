@@ -13,7 +13,7 @@ export interface Message {
   senderName: string;
   senderType: 'child' | 'ai';
   content: string;
-  timestamp: Date;
+  timestamp: string;
   reactions?: string[];
 }
 

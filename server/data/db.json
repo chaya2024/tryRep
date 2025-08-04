@@ -1,0 +1,80 @@
+{
+  "lessons": [
+    {
+      "id": "1",
+      "title": "מתמטיקה בסיסית",
+      "subject": "מתמטיקה",
+      "targetAge": 8,
+      "description": "שיעור בסיסי במתמטיקה לילדים",
+      "steps": [
+        {
+          "id": "step-1",
+          "title": "ספירה",
+          "description": "בואו נספור יחד",
+          "aiPrompt": "עזור לילדים לספור עד 10",
+          "duration": 5
+        },
+        {
+          "id": "step-2",
+          "title": "חיבור",
+          "description": "נלמד לחבר מספרים",
+          "aiPrompt": "הסבר חיבור פשוט",
+          "duration": 8
+        }
+      ],
+      "participants": [
+        {
+          "id": "child-1",
+          "name": "דוד",
+          "avatar": "👦",
+          "personality": "סקרן ואוהב לשאול שאלות"
+        },
+        {
+          "id": "child-2",
+          "name": "שרה",
+          "avatar": "👧",
+          "personality": "שקטה אבל חכמה מאוד"
+        }
+      ]
+    }
+  ],
+  "children": [
+    {
+      "id": "child-1",
+      "name": "דוד",
+      "avatar": "👦",
+      "personality": "סקרן ואוהב לשאול שאלות"
+    },
+    {
+      "id": "child-2",
+      "name": "שרה",
+      "avatar": "👧",
+      "personality": "שקטה אבל חכמה מאוד"
+    },
+    {
+      "id": "child-3",
+      "name": "יוסי",
+      "avatar": "👦",
+      "personality": "אנרגטי ואוהב משחקים"
+    }
+  ],
+  "messages": [],
+  "aiTexts": [
+    {
+      "id": "ai-1",
+      "type": "greeting",
+      "content": "שלום ילדים! בואו נתחיל את השיעור שלנו",
+      "context": "start",
+      "order": 1,
+      "isActive": true
+    },
+    {
+      "id": "ai-2",
+      "type": "encouragement",
+      "content": "מעולה! אתם עושים עבודה נהדרת",
+      "context": "general",
+      "order": 2,
+      "isActive": true
+    }
+  ]
+}

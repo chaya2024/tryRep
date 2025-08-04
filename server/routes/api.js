@@ -1,34 +1,33 @@
 const express = require('express');
-const Lesson = require('../models/Lesson');
-const Child = require('../models/Child');
-const Message = require('../models/Message');
-const AIText = require('../models/AIText');
+const fileDb = require('../services/fileDb');
 const router = express.Router();
 
 // שליפת כל הילדים
 router.get('/children', async (req, res) => {
   try {
-    const children = await Child.find();
+    const children = await fileDb.find('children');
     res.json(children);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching children:', error);
+    res.status(500).json({ error: 'Database error' });
   }
 });
 
 // שליפת כל השיעורים
 router.get('/lessons', async (req, res) => {
   try {
-    const lessons = await Lesson.find().populate('participants');
+    const lessons = await fileDb.find('lessons');
     res.json(lessons);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching lessons:', error);
+    res.status(500).json({ error: 'Database error' });
   }
 });
 
 // שליפת שיעור ספציפי
 router.get('/lessons/:id', async (req, res) => {
   try {
-    const lesson = await Lesson.findById(req.params.id).populate('participants');
+    const lesson = await fileDb.findById('lessons', req.params.id);
     if (!lesson) {
       return res.status(404).json({ error: 'Lesson not found' });
     }
@@ -41,7 +40,7 @@ router.get('/lessons/:id', async (req, res) => {
 // שליפת כל ההודעות לשיעור מסוים
 router.get('/messages/:lessonId', async (req, res) => {
   try {
-    const messages = await Message.find({ lessonId: req.params.lessonId });
+    const messages = await fileDb.find('messages', { lessonId: req.params.lessonId });
     res.json(messages);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -51,8 +50,7 @@ router.get('/messages/:lessonId', async (req, res) => {
 // הוספת הודעה חדשה
 router.post('/messages', async (req, res) => {
   try {
-    const msg = new Message(req.body);
-    await msg.save();
+    const msg = await fileDb.create('messages', req.body);
     res.json(msg);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -68,7 +66,9 @@ router.get('/ai-texts', async (req, res) => {
     if (type) query.type = type;
     if (context) query.context = context;
     
-    const texts = await AIText.find(query).sort('order');
+    const texts = await fileDb.find('aiTexts', query);
+    // Sort by order
+    texts.sort((a, b) => a.order - b.order);
     res.json(texts);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -79,7 +79,7 @@ router.get('/ai-texts', async (req, res) => {
 router.get('/ai-texts/random/:type', async (req, res) => {
   try {
     const { type } = req.params;
-    const texts = await AIText.find({ type, isActive: true });
+    const texts = await fileDb.find('aiTexts', { type, isActive: true });
     
     if (texts.length === 0) {
       return res.status(404).json({ error: 'No texts found for this type' });
@@ -95,8 +95,7 @@ router.get('/ai-texts/random/:type', async (req, res) => {
 // הוספת טקסט AI חדש
 router.post('/ai-texts', async (req, res) => {
   try {
-    const aiText = new AIText(req.body);
-    await aiText.save();
+    const aiText = await fileDb.create('aiTexts', req.body);
     res.json(aiText);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -106,11 +105,7 @@ router.post('/ai-texts', async (req, res) => {
 // עדכון טקסט AI
 router.put('/ai-texts/:id', async (req, res) => {
   try {
-    const aiText = await AIText.findByIdAndUpdate(
-      req.params.id, 
-      req.body, 
-      { new: true }
-    );
+    const aiText = await fileDb.update('aiTexts', req.params.id, req.body);
     if (!aiText) {
       return res.status(404).json({ error: 'AI Text not found' });
     }
@@ -123,8 +118,8 @@ router.put('/ai-texts/:id', async (req, res) => {
 // מחיקת טקסט AI
 router.delete('/ai-texts/:id', async (req, res) => {
   try {
-    const aiText = await AIText.findByIdAndDelete(req.params.id);
-    if (!aiText) {
+    const success = await fileDb.delete('aiTexts', req.params.id);
+    if (!success) {
       return res.status(404).json({ error: 'AI Text not found' });
     }
     res.json({ message: 'AI Text deleted successfully' });
