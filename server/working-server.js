@@ -238,6 +238,65 @@ app.get('/api/admin/scripts', (req, res) => {
   res.json(mockScripts);
 });
 
+// CRUD operations for lessons
+app.post('/api/lessons', (req, res) => {
+  const newLesson = {
+    id: Date.now().toString(),
+    ...req.body,
+    participants: [],
+    createdAt: new Date().toISOString()
+  };
+  mockData.lessons.push(newLesson);
+  res.json(newLesson);
+});
+
+app.put('/api/lessons/:id', (req, res) => {
+  const lessonIndex = mockData.lessons.findIndex(l => l.id === req.params.id);
+  if (lessonIndex === -1) {
+    return res.status(404).json({ error: 'Lesson not found' });
+  }
+  mockData.lessons[lessonIndex] = { ...mockData.lessons[lessonIndex], ...req.body };
+  res.json(mockData.lessons[lessonIndex]);
+});
+
+app.delete('/api/lessons/:id', (req, res) => {
+  const lessonIndex = mockData.lessons.findIndex(l => l.id === req.params.id);
+  if (lessonIndex === -1) {
+    return res.status(404).json({ error: 'Lesson not found' });
+  }
+  mockData.lessons.splice(lessonIndex, 1);
+  res.json({ message: 'Lesson deleted successfully' });
+});
+
+// CRUD operations for children/users
+app.post('/api/children', (req, res) => {
+  const newChild = {
+    id: Date.now().toString(),
+    ...req.body,
+    createdAt: new Date().toISOString()
+  };
+  mockData.children.push(newChild);
+  res.json(newChild);
+});
+
+app.put('/api/children/:id', (req, res) => {
+  const childIndex = mockData.children.findIndex(c => c.id === req.params.id);
+  if (childIndex === -1) {
+    return res.status(404).json({ error: 'Child not found' });
+  }
+  mockData.children[childIndex] = { ...mockData.children[childIndex], ...req.body };
+  res.json(mockData.children[childIndex]);
+});
+
+app.delete('/api/children/:id', (req, res) => {
+  const childIndex = mockData.children.findIndex(c => c.id === req.params.id);
+  if (childIndex === -1) {
+    return res.status(404).json({ error: 'Child not found' });
+  }
+  mockData.children.splice(childIndex, 1);
+  res.json({ message: 'Child deleted successfully' });
+});
+
 app.listen(3000, () => {
   console.log('Working server running on http://localhost:3000');
   console.log('Using mock data for development');
