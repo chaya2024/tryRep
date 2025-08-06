@@ -16,14 +16,31 @@ router.get('/children', async (req, res) => {
 // שליפת כל השיעורים
 router.get('/lessons', async (req, res) => {
   try {
-    const lessons = await fileDb.find('lessons');
-
-    // ודא שהשיעורים הם מערך
+    let lessons = await fileDb.find('lessons');
     if (!Array.isArray(lessons)) {
       console.warn('Invalid lessons format from fileDb');
       return res.status(500).json({ error: 'Invalid data format' });
     }
-
+    // Normalize lessons
+    lessons = lessons.map((lesson, idx) => {
+      return {
+        id: lesson.id || `lesson-${idx}`,
+        title: lesson.title || '',
+        subject: lesson.subject || '',
+        targetAge: lesson.targetAge || 0,
+        description: lesson.description || '',
+        steps: Array.isArray(lesson.steps)
+          ? lesson.steps.map((step, sidx) => ({
+              id: step.id || `step-${sidx}`,
+              title: step.title || '',
+              description: step.description || '',
+              aiPrompt: step.aiPrompt || '',
+              duration: typeof step.duration === 'number' ? step.duration : 5
+            }))
+          : [],
+        participants: Array.isArray(lesson.participants) ? lesson.participants : [],
+      };
+    });
     res.json(lessons);
   } catch (error) {
     console.error('Error fetching lessons:', error);
