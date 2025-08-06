@@ -36,6 +36,22 @@
           "personality": "שקטה אבל חכמה מאוד"
         }
       ]
+    },
+    {
+      "title": "טבע",
+      "subject": "חופי ים בישראל",
+      "targetAge": 8,
+      "description": "מעניין ומשעשע",
+      "steps": [
+        {
+          "id": "1",
+          "title": "ים אשדוד",
+          "description": "שילוב של תאוריה וכיף",
+          "aiPrompt": "המחש לילדים איך נראה הים",
+          "duration": 5
+        }
+      ],
+      "id": "1754466490759hacvqhgwe"
     }
   ],
   "children": [
@@ -56,6 +72,15 @@
       "name": "יוסי",
       "avatar": "👦",
       "personality": "אנרגטי ואוהב משחקים"
+    },
+    {
+      "name": "יעקב",
+      "avatar": "👦",
+      "personality": "חפרן ובלאגניסט",
+      "age": 8,
+      "grade": " ג'",
+      "isActive": true,
+      "id": "17544662265057hur1bq5l"
     }
   ],
   "messages": [],

@@ -1,13 +1,39 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
-const api = axios.create({
+// יצירת Axios instance
+export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+// Interceptors for debugging
+api.interceptors.request.use(
+  (config) => {
+    console.log('API Request:', config.method?.toUpperCase(), config.url);
+    return config;
+  },
+  (error) => {
+    console.error('API Request Error:', error);
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => {
+    console.log('API Response:', response.status, response.config.url);
+    return response;
+  },
+  (error) => {
+    console.error('API Response Error:', error.response?.status, error.response?.data);
+    return Promise.reject(error);
+  }
+);
+
+// ----------------- TYPES -----------------
 
 export interface Child {
   id: string;
@@ -53,7 +79,8 @@ export interface AIText {
   isActive: boolean;
 }
 
-// Helper function to convert MongoDB _id to id
+// ----------------- HELPERS -----------------
+
 const convertMongoId = (obj: any) => {
   if (obj._id) {
     obj.id = obj._id;
@@ -62,9 +89,9 @@ const convertMongoId = (obj: any) => {
   return obj;
 };
 
-// API functions
+// ----------------- API SERVICE -----------------
+
 export const apiService = {
-  // שליפת כל השיעורים
   async getLessons(): Promise<Lesson[]> {
     const response = await api.get('/lessons');
     return response.data.map((lesson: any) => ({
@@ -72,12 +99,11 @@ export const apiService = {
       participants: lesson.participants.map((child: any) => convertMongoId(child)),
       steps: lesson.steps.map((step: any, index: number) => ({
         ...convertMongoId(step),
-        id: step._id || `step-${index}`
-      }))
+        id: step._id || `step-${index}`,
+      })),
     }));
   },
 
-  // שליפת שיעור ספציפי
   async getLesson(id: string): Promise<Lesson> {
     const response = await api.get(`/lessons/${id}`);
     const lesson = response.data;
@@ -86,59 +112,51 @@ export const apiService = {
       participants: lesson.participants.map((child: any) => convertMongoId(child)),
       steps: lesson.steps.map((step: any, index: number) => ({
         ...convertMongoId(step),
-        id: step._id || `step-${index}`
-      }))
+        id: step._id || `step-${index}`,
+      })),
     };
   },
 
-  // שליפת כל הילדים
   async getChildren(): Promise<Child[]> {
     const response = await api.get('/children');
     return response.data.map((child: any) => convertMongoId(child));
   },
 
-  // שליפת הודעות לשיעור
   async getMessages(lessonId: string): Promise<Message[]> {
     const response = await api.get(`/messages/${lessonId}`);
     return response.data.map((message: any) => convertMongoId(message));
   },
 
-  // הוספת הודעה חדשה
   async addMessage(message: Omit<Message, 'id' | 'timestamp'>): Promise<Message> {
     const response = await api.post('/messages', message);
     return convertMongoId(response.data);
   },
 
-  // שליפת טקסטים של AI
   async getAITexts(type?: string, context?: string): Promise<AIText[]> {
     const params = new URLSearchParams();
     if (type) params.append('type', type);
     if (context) params.append('context', context);
-    
+
     const response = await api.get(`/ai-texts?${params.toString()}`);
     return response.data.map((text: any) => convertMongoId(text));
   },
 
-  // שליפת טקסט AI אקראי
   async getRandomAIText(type: string): Promise<AIText> {
     const response = await api.get(`/ai-texts/random/${type}`);
     return convertMongoId(response.data);
   },
 
-  // הוספת טקסט AI חדש
   async addAIText(text: Omit<AIText, 'id'>): Promise<AIText> {
     const response = await api.post('/ai-texts', text);
     return convertMongoId(response.data);
   },
 
-  // עדכון טקסט AI
   async updateAIText(id: string, text: Partial<AIText>): Promise<AIText> {
     const response = await api.put(`/ai-texts/${id}`, text);
     return convertMongoId(response.data);
   },
 
-  // מחיקת טקסט AI
   async deleteAIText(id: string): Promise<void> {
     await api.delete(`/ai-texts/${id}`);
   },
-}; 
+};

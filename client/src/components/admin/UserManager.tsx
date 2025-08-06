@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Plus, Edit, Trash2, User, Smile } from 'lucide-react';
-import { api } from '@/services/apiCopy';
+import { api } from '@/services/api';
 
 interface User {
   id: string;

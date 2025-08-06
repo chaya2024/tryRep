@@ -4,7 +4,7 @@ import { ScriptManager } from '../components/admin/ScriptManager';
 import { LessonManager } from '../components/admin/LessonManager';
 import { UserManager } from '../components/admin/UserManager';
 import { Users, FileText, BarChart3, BookOpen, User } from 'lucide-react';
-import { api } from '../services/apiCopy';
+import { api } from '../services/api';
 
 interface Group {
   id: string;

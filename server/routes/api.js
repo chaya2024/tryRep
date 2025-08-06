@@ -17,6 +17,13 @@ router.get('/children', async (req, res) => {
 router.get('/lessons', async (req, res) => {
   try {
     const lessons = await fileDb.find('lessons');
+
+    // ודא שהשיעורים הם מערך
+    if (!Array.isArray(lessons)) {
+      console.warn('Invalid lessons format from fileDb');
+      return res.status(500).json({ error: 'Invalid data format' });
+    }
+
     res.json(lessons);
   } catch (error) {
     console.error('Error fetching lessons:', error);
@@ -127,5 +134,41 @@ router.delete('/ai-texts/:id', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// שליפת כל הסקריפטים (admin)
+router.get('/admin/scripts', async (req, res) => {
+  try {
+    const scripts = await fileDb.find('scripts');
+    res.json(scripts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
+// שליפת כל הקבוצות (admin)
+router.get('/admin/groups', async (req, res) => {
+  try {
+    const groups = await fileDb.find('groups');
+    res.json(groups);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+// יצירת ילד חדש
+router.post('/children', async (req, res) => {
+  try {
+    const child = await fileDb.create('children', req.body);
+    res.json(child);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+// יצירת שיעור חדש
+router.post('/lessons', async (req, res) => {
+  try {
+    const lesson = await fileDb.create('lessons', req.body);
+    res.json(lesson);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;

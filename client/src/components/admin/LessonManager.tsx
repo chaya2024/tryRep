@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Edit, Trash2, BookOpen, Users, Clock } from 'lucide-react';
-import { api } from '@/services/apiCopy';
+import { api } from '@/services/api';
 
 interface Lesson {
   id: string;
@@ -313,7 +313,7 @@ export const LessonManager: React.FC = () => {
 
                 <div className="flex gap-2">
                   <Badge variant="outline">{lesson.steps.length} שלבים</Badge>
-                  <Badge variant="secondary">{lesson.participants.length} משתתפים</Badge>
+                  <Badge variant="secondary">{lesson.participants.length ?? 0} משתתפים</Badge>
                 </div>
               </div>
               
