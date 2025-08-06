@@ -222,6 +222,16 @@ router.put('/lessons/:id', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// מחיקת שיעור
+router.delete('/lessons/:id', async (req, res) => {
+  try {
+    const deleted = await fileDb.delete('lessons', req.params.id);
+    if (!deleted) return res.status(404).json({ error: 'Lesson not found' });
+    res.json({ message: 'Lesson deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 // POST/PUT children
 router.post('/children', async (req, res) => {
   try {
@@ -238,6 +248,16 @@ router.put('/children/:id', async (req, res) => {
     const updated = await fileDb.update('children', req.params.id, child);
     if (!updated) return res.status(404).json({ error: 'Child not found' });
     res.json(updated);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+// מחיקת ילד
+router.delete('/children/:id', async (req, res) => {
+  try {
+    const deleted = await fileDb.delete('children', req.params.id);
+    if (!deleted) return res.status(404).json({ error: 'Child not found' });
+    res.json({ message: 'Child deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

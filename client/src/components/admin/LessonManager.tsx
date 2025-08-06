@@ -7,7 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, Edit, Trash2, BookOpen, Users, Clock } from 'lucide-react';
-import { api } from '@/services/api';
+import { Checkbox } from "@/components/ui/checkbox";
+import { apiService } from '@/services/api';
 
 interface Lesson {
   id: string;
@@ -40,16 +41,19 @@ export const LessonManager: React.FC = () => {
     subject: '',
     targetAge: 8,
     description: '',
-    steps: [{ id: '1', title: '', description: '', aiPrompt: '', duration: 5 }]
+    steps: [{ id: '1', title: '', description: '', aiPrompt: '', duration: 5 }],
+    participants: [] as any[] // Initialize participants as an empty array of any type
   });
+  const [allChildren, setAllChildren] = useState<any[]>([]);
 
   useEffect(() => {
     fetchLessons();
+    apiService.getChildren().then(setAllChildren);
   }, []);
 
   const fetchLessons = async () => {
     try {
-      const response = await api.get('/lessons');
+      const response = await apiService.getLessons();
       setLessons(response.data);
     } catch (error) {
       console.error('Error fetching lessons:', error);
@@ -62,9 +66,9 @@ export const LessonManager: React.FC = () => {
     e.preventDefault();
     try {
       if (editingLesson) {
-        await api.put(`/lessons/${editingLesson.id}`, formData);
+        await apiService.updateLesson(editingLesson.id, formData);
       } else {
-        await api.post('/lessons', formData);
+        await apiService.createLesson(formData);
       }
       setIsDialogOpen(false);
       setEditingLesson(null);
@@ -78,7 +82,7 @@ export const LessonManager: React.FC = () => {
   const handleDelete = async (lessonId: string) => {
     if (window.confirm('האם אתה בטוח שברצונך למחוק שיעור זה?')) {
       try {
-        await api.delete(`/lessons/${lessonId}`);
+        await apiService.deleteLesson(lessonId);
         fetchLessons();
       } catch (error) {
         console.error('Error deleting lesson:', error);
@@ -93,7 +97,8 @@ export const LessonManager: React.FC = () => {
       subject: lesson.subject,
       targetAge: lesson.targetAge,
       description: lesson.description,
-      steps: lesson.steps
+      steps: lesson.steps,
+      participants: lesson.participants
     });
     setIsDialogOpen(true);
   };
@@ -104,7 +109,8 @@ export const LessonManager: React.FC = () => {
       subject: '',
       targetAge: 8,
       description: '',
-      steps: [{ id: '1', title: '', description: '', aiPrompt: '', duration: 5 }]
+      steps: [{ id: '1', title: '', description: '', aiPrompt: '', duration: 5 }],
+      participants: []
     });
   };
 
@@ -134,6 +140,15 @@ export const LessonManager: React.FC = () => {
       steps: prev.steps.map((step, i) => 
         i === index ? { ...step, [field]: value } : step
       )
+    }));
+  };
+
+  const handleToggleParticipant = (childId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      participants: prev.participants?.some((c: any) => c.id === childId)
+        ? prev.participants.filter((c: any) => c.id !== childId)
+        : [...(prev.participants || []), allChildren.find((c) => c.id === childId)]
     }));
   };
 
@@ -271,6 +286,22 @@ export const LessonManager: React.FC = () => {
                         />
                       </div>
                     </Card>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label>משתתפים בשיעור</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                  {allChildren.map((child) => (
+                    <label key={child.id} className="flex items-center gap-2 p-2 border rounded-lg cursor-pointer">
+                      <Checkbox
+                        checked={!!formData.participants?.some((c: any) => c.id === child.id)}
+                        onCheckedChange={() => handleToggleParticipant(child.id)}
+                      />
+                      <span>{child.name}</span>
+                      <span className="text-xs text-gray-400">{child.personality}</span>
+                    </label>
                   ))}
                 </div>
               </div>
