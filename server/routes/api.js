@@ -170,20 +170,74 @@ router.get('/admin/groups', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-// יצירת ילד חדש
-router.post('/children', async (req, res) => {
+// Normalize lesson helper
+function normalizeLesson(lesson, idx = 0) {
+  return {
+    id: lesson.id || `lesson-${idx}`,
+    title: lesson.title || '',
+    subject: lesson.subject || '',
+    targetAge: lesson.targetAge || 0,
+    description: lesson.description || '',
+    steps: Array.isArray(lesson.steps)
+      ? lesson.steps.map((step, sidx) => ({
+          id: step.id || `step-${sidx}`,
+          title: step.title || '',
+          description: step.description || '',
+          aiPrompt: step.aiPrompt || '',
+          duration: typeof step.duration === 'number' ? step.duration : 5
+        }))
+      : [],
+    participants: Array.isArray(lesson.participants) ? lesson.participants : [],
+  };
+}
+// Normalize child helper
+function normalizeChild(child, idx = 0) {
+  return {
+    id: child.id || `child-${idx}`,
+    name: child.name || '',
+    avatar: child.avatar || '👦',
+    personality: child.personality || '',
+    age: typeof child.age === 'number' ? child.age : undefined,
+    grade: child.grade || undefined,
+    isActive: typeof child.isActive === 'boolean' ? child.isActive : true,
+  };
+}
+// POST/PUT lessons
+router.post('/lessons', async (req, res) => {
   try {
-    const child = await fileDb.create('children', req.body);
-    res.json(child);
+    const lesson = normalizeLesson(req.body);
+    const saved = await fileDb.create('lessons', lesson);
+    res.json(saved);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-// יצירת שיעור חדש
-router.post('/lessons', async (req, res) => {
+router.put('/lessons/:id', async (req, res) => {
   try {
-    const lesson = await fileDb.create('lessons', req.body);
-    res.json(lesson);
+    const lesson = normalizeLesson({ ...req.body, id: req.params.id });
+    const updated = await fileDb.update('lessons', req.params.id, lesson);
+    if (!updated) return res.status(404).json({ error: 'Lesson not found' });
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+// POST/PUT children
+router.post('/children', async (req, res) => {
+  try {
+    const child = normalizeChild(req.body);
+    const saved = await fileDb.create('children', child);
+    res.json(saved);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+router.put('/children/:id', async (req, res) => {
+  try {
+    const child = normalizeChild({ ...req.body, id: req.params.id });
+    const updated = await fileDb.update('children', req.params.id, child);
+    if (!updated) return res.status(404).json({ error: 'Child not found' });
+    res.json(updated);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
